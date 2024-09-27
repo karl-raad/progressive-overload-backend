@@ -13,16 +13,22 @@ exports.handler = async (event) => {
             exerciseSets: body.exerciseSets || []
         },
     };
-
+    const corsHeaders = {
+        "Access-Control-Allow-Origin": "*",
+        "Access-Control-Allow-Headers": "Content-Type",
+        "Access-Control-Allow-Methods": "OPTIONS,POST,GET,PUT,DELETE",
+    };
     try {
         await dynamoDb.put(params).promise();
         return {
             statusCode: 201,
+            headers: corsHeaders,
             body: JSON.stringify({ message: 'Exercise created successfully' }),
         };
     } catch (error) {
         return {
             statusCode: 500,
+            headers: corsHeaders,
             body: JSON.stringify({ error: error.message }),
         };
     }

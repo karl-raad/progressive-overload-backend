@@ -69,10 +69,7 @@ export class ProgressiveOverloadBackendStack extends cdk.Stack {
       }
     });
 
-    // Define API Gateway resources and methods
-    const exercises = api.root.addResource('exercises');
-    exercises.addMethod('POST', new apigateway.LambdaIntegration(createFunction));
-    exercises.addMethod('GET', new apigateway.LambdaIntegration(readFunction), {
+    const corsParams = {
       methodResponses: [{
         statusCode: '200',
         responseParameters: {
@@ -80,11 +77,15 @@ export class ProgressiveOverloadBackendStack extends cdk.Stack {
           'method.response.header.Access-Control-Allow-Headers': true,
           'method.response.header.Access-Control-Allow-Methods': true,
         },
-      }],
-    });
+      }]
+    };
+    // Define API Gateway resources and methods
+    const exercises = api.root.addResource('exercises');
+    exercises.addMethod('POST', new apigateway.LambdaIntegration(createFunction), corsParams);
+    exercises.addMethod('GET', new apigateway.LambdaIntegration(readFunction), corsParams);
 
     const exercise = exercises.addResource('{exerciseId}');
-    exercise.addMethod('PUT', new apigateway.LambdaIntegration(updateFunction));
-    exercise.addMethod('DELETE', new apigateway.LambdaIntegration(deleteFunction));
+    exercise.addMethod('PUT', new apigateway.LambdaIntegration(updateFunction), corsParams);
+    exercise.addMethod('DELETE', new apigateway.LambdaIntegration(deleteFunction), corsParams);
   }
 }
