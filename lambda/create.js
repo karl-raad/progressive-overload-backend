@@ -10,7 +10,8 @@ exports.handler = async (event) => {
             exerciseId: body.exerciseId,
             exerciseName: body.exerciseName,
             exerciseDate: body.exerciseDate,
-            exerciseSets: body.exerciseSets || []
+            exerciseReps: body.exerciseReps || [],
+            exerciseWeights: body.exerciseWeights || []
         },
     };
     const corsHeaders = {

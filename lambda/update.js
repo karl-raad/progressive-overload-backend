@@ -7,11 +7,12 @@ exports.handler = async (event) => {
     const params = {
         TableName: TABLE_NAME,
         Key: { exerciseId: event.pathParameters.exerciseId },
-        UpdateExpression: 'set exerciseName = :exerciseName, exerciseDate = :exerciseDate, exerciseSets = :exerciseSets',
+        UpdateExpression: 'set exerciseName = :exerciseName, exerciseDate = :exerciseDate, exerciseReps = :exerciseReps, exerciseWeights = :exerciseWeights',
         ExpressionAttributeValues: {
             ':exerciseName': body.exerciseName,
             ':exerciseDate': body.exerciseDate,
-            ':exerciseSets': body.exerciseSets || []
+            ':exerciseReps': body.exerciseReps || [],
+            ':exerciseWeights': body.exerciseWeights || []
         },
         ReturnValues: 'UPDATED_NEW',
     };
@@ -21,6 +22,14 @@ exports.handler = async (event) => {
         "Access-Control-Allow-Methods": "OPTIONS,POST,GET,PUT,DELETE",
     };
     try {
+        const existingItem = await dynamoDb.get(params).promise();
+        if (!existingItem.Item) {
+            return {
+                statusCode: 404,
+                headers: corsHeaders,
+                body: JSON.stringify({ error: 'Exercise not found' }),
+            };
+        }
         await dynamoDb.update(params).promise();
         return {
             statusCode: 200,
