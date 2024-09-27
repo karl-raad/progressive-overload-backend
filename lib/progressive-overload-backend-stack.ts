@@ -72,7 +72,16 @@ export class ProgressiveOverloadBackendStack extends cdk.Stack {
     // Define API Gateway resources and methods
     const exercises = api.root.addResource('exercises');
     exercises.addMethod('POST', new apigateway.LambdaIntegration(createFunction));
-    exercises.addMethod('GET', new apigateway.LambdaIntegration(readFunction));
+    exercises.addMethod('GET', new apigateway.LambdaIntegration(readFunction), {
+      methodResponses: [{
+        statusCode: '200',
+        responseParameters: {
+          'method.response.header.Access-Control-Allow-Origin': true,
+          'method.response.header.Access-Control-Allow-Headers': true,
+          'method.response.header.Access-Control-Allow-Methods': true,
+        },
+      }],
+    });
 
     const exercise = exercises.addResource('{exerciseId}');
     exercise.addMethod('PUT', new apigateway.LambdaIntegration(updateFunction));

@@ -11,11 +11,21 @@ exports.handler = async (event) => {
         const data = await dynamoDb.scan(params).promise();
         return {
             statusCode: 200,
+            headers: {
+                "Access-Control-Allow-Origin": "*",
+                "Access-Control-Allow-Headers": "Content-Type",
+                "Access-Control-Allow-Methods": "OPTIONS,POST,GET,PUT,DELETE",
+            },
             body: JSON.stringify(data.Items),
         };
     } catch (error) {
         return {
             statusCode: 500,
+            headers: {
+                "Access-Control-Allow-Origin": "*",
+                "Access-Control-Allow-Headers": "Content-Type",
+                "Access-Control-Allow-Methods": "OPTIONS,POST,GET,PUT,DELETE",
+            },
             body: JSON.stringify({ error: error.message }),
         };
     }
