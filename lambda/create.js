@@ -1,17 +1,19 @@
 const AWS = require('aws-sdk');
 const dynamoDb = new AWS.DynamoDB.DocumentClient();
 const TABLE_NAME = process.env.TABLE_NAME;
+const { v4: uuidv4 } = require('uuid');
 
 exports.handler = async (event) => {
     const body = JSON.parse(event.body);
     const params = {
         TableName: TABLE_NAME,
         Item: {
-            exerciseId: body.exerciseId,
+            exerciseId: uuidv4(),
             exerciseName: body.exerciseName,
             exerciseDate: body.exerciseDate,
             exerciseReps: body.exerciseReps || [],
-            exerciseWeights: body.exerciseWeights || []
+            exerciseWeights: body.exerciseWeights || [],
+            exerciseVolume: body.exerciseVolume
         },
     };
     const corsHeaders = {

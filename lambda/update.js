@@ -7,12 +7,13 @@ exports.handler = async (event) => {
     const params = {
         TableName: TABLE_NAME,
         Key: { exerciseId: event.pathParameters.exerciseId },
-        UpdateExpression: 'set exerciseName = :exerciseName, exerciseDate = :exerciseDate, exerciseReps = :exerciseReps, exerciseWeights = :exerciseWeights',
+        UpdateExpression: 'set exerciseName = :exerciseName, exerciseDate = :exerciseDate, exerciseReps = :exerciseReps, exerciseWeights = :exerciseWeights, exerciseVolume = :exerciseVolume',
         ExpressionAttributeValues: {
             ':exerciseName': body.exerciseName,
             ':exerciseDate': body.exerciseDate,
             ':exerciseReps': body.exerciseReps || [],
-            ':exerciseWeights': body.exerciseWeights || []
+            ':exerciseWeights': body.exerciseWeights || [],
+            ':exerciseVolume': body.exerciseVolume
         },
         ReturnValues: 'UPDATED_NEW',
     };
