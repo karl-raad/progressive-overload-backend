@@ -5,6 +5,7 @@ const { v4: uuidv4 } = require('uuid');
 
 exports.handler = async (event) => {
     const body = JSON.parse(event.body);
+    const userEmail = body.userEmail;
     const params = {
         TableName: TABLE_NAME,
         Item: {
@@ -13,7 +14,9 @@ exports.handler = async (event) => {
             exerciseDate: body.exerciseDate,
             exerciseReps: body.exerciseReps || [],
             exerciseWeights: body.exerciseWeights || [],
-            exerciseVolume: body.exerciseVolume
+            exerciseVolume: body.exerciseVolume,
+            userEmail: userEmail,
+            'userEmail#exerciseName': `${body.userEmail}#${body.exerciseName}`
         },
     };
     const corsHeaders = {

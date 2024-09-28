@@ -13,14 +13,6 @@ exports.handler = async (event) => {
         "Access-Control-Allow-Methods": "OPTIONS,POST,GET,PUT,DELETE",
     };
     try {
-        const existingItem = await dynamoDb.get(params).promise();
-        if (!existingItem.Item) {
-            return {
-                statusCode: 404,
-                headers: corsHeaders,
-                body: JSON.stringify({ error: 'Exercise not found' }),
-            };
-        }
         await dynamoDb.delete(params).promise();
         return {
             statusCode: 200,

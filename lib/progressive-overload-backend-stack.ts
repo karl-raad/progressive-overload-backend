@@ -15,6 +15,20 @@ export class ProgressiveOverloadBackendStack extends cdk.Stack {
       billingMode: dynamodb.BillingMode.PAY_PER_REQUEST,
     });
 
+    table.addGlobalSecondaryIndex({
+      indexName: 'UserEmailIndex',
+      partitionKey: { name: 'userEmail', type: dynamodb.AttributeType.STRING },
+      sortKey: { name: 'exerciseDate', type: dynamodb.AttributeType.STRING },
+      projectionType: dynamodb.ProjectionType.ALL
+    });
+
+    table.addGlobalSecondaryIndex({
+      indexName: 'UserEmailExerciseNameIndex',
+      partitionKey: { name: 'userEmail#exerciseName', type: dynamodb.AttributeType.STRING },
+      sortKey: { name: 'exerciseDate', type: dynamodb.AttributeType.STRING },
+      projectionType: dynamodb.ProjectionType.ALL
+    });
+
     // Create Lambda functions for each CRUD operation
     const createFunction = new lambda.Function(this, 'CreateFunction', {
       runtime: lambda.Runtime.NODEJS_20_X,
