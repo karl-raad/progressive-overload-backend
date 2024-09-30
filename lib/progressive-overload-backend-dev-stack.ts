@@ -7,12 +7,12 @@ import * as dynamodb from 'aws-cdk-lib/aws-dynamodb';
 import * as cr from 'aws-cdk-lib/custom-resources';
 import * as iam from 'aws-cdk-lib/aws-iam';
 
-export class ProgressiveOverloadBackendStack extends cdk.Stack {
+export class ProgressiveOverloadDevStack extends cdk.Stack {
   constructor(scope: Construct, id: string, props?: cdk.StackProps) {
     super(scope, id, props);
 
     // Create a DynamoDB table
-    const exercisesTable = new dynamodb.Table(this, 'ExercisesTable', {
+    const exercisesTable = new dynamodb.Table(this, 'DevExercisesTable', {
       partitionKey: { name: 'exerciseId', type: dynamodb.AttributeType.STRING },
       billingMode: dynamodb.BillingMode.PAY_PER_REQUEST,
     });
@@ -37,7 +37,7 @@ export class ProgressiveOverloadBackendStack extends cdk.Stack {
     });
 
     // Create Lambda functions for each CRUD operation
-    const createFunction = new lambda.Function(this, 'CreateFunction', {
+    const createFunction = new lambda.Function(this, 'DevCreateFunction', {
       runtime: lambda.Runtime.NODEJS_20_X,
       code: lambda.Code.fromAsset('dist/exercises'),
       handler: 'create.handler',
@@ -46,7 +46,7 @@ export class ProgressiveOverloadBackendStack extends cdk.Stack {
       },
     });
 
-    const readFunction = new lambda.Function(this, 'ReadFunction', {
+    const readFunction = new lambda.Function(this, 'DevReadFunction', {
       runtime: lambda.Runtime.NODEJS_20_X,
       code: lambda.Code.fromAsset('dist/exercises'),
       handler: 'read.handler',
@@ -55,7 +55,7 @@ export class ProgressiveOverloadBackendStack extends cdk.Stack {
       },
     });
 
-    const updateFunction = new lambda.Function(this, 'UpdateFunction', {
+    const updateFunction = new lambda.Function(this, 'DevUpdateFunction', {
       runtime: lambda.Runtime.NODEJS_20_X,
       code: lambda.Code.fromAsset('dist/exercises'),
       handler: 'update.handler',
@@ -64,7 +64,7 @@ export class ProgressiveOverloadBackendStack extends cdk.Stack {
       },
     });
 
-    const deleteFunction = new lambda.Function(this, 'DeleteFunction', {
+    const deleteFunction = new lambda.Function(this, 'DevDeleteFunction', {
       runtime: lambda.Runtime.NODEJS_20_X,
       code: lambda.Code.fromAsset('dist/exercises'),
       handler: 'delete.handler',
@@ -73,7 +73,7 @@ export class ProgressiveOverloadBackendStack extends cdk.Stack {
       },
     });
 
-    const initFunction = new lambda.Function(this, 'InitDataFunction', {
+    const initFunction = new lambda.Function(this, 'DevInitDataFunction', {
       runtime: lambda.Runtime.NODEJS_20_X,
       code: lambda.Code.fromAsset('dist/exercisesData'),
       handler: 'init.handler',
@@ -83,7 +83,7 @@ export class ProgressiveOverloadBackendStack extends cdk.Stack {
       timeout: cdk.Duration.seconds(10)
     });
 
-    const readDataFunction = new lambda.Function(this, 'ReadDataFunction', {
+    const readDataFunction = new lambda.Function(this, 'DevReadDataFunction', {
       runtime: lambda.Runtime.NODEJS_20_X,
       code: lambda.Code.fromAsset('dist/exercisesData'),
       handler: 'read.handler',
@@ -118,11 +118,11 @@ export class ProgressiveOverloadBackendStack extends cdk.Stack {
     });
 
     // Create an API Gateway
-    const api = new apigateway.RestApi(this, 'ExercisesApi', {
-      restApiName: 'Exercises Service',
-      description: 'This service serves exercises.',
+    const api = new apigateway.RestApi(this, 'DevExercisesApi', {
+      restApiName: 'Exercises Service (DEV)',
+      description: 'This service serves exercises (DEV).',
       deployOptions: {
-        stageName: this.node.tryGetContext('stage') || 'prod',
+        stageName: this.node.tryGetContext('stage') || 'dev',
       },
       defaultCorsPreflightOptions: {
         allowOrigins: apigateway.Cors.ALL_ORIGINS,
@@ -154,4 +154,6 @@ export class ProgressiveOverloadBackendStack extends cdk.Stack {
     const exercisesData = api.root.addResource('exercises-data');
     exercisesData.addMethod('GET', new apigateway.LambdaIntegration(readDataFunction), corsParams);
   }
+
+
 }
