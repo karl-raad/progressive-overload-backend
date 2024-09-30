@@ -6,10 +6,42 @@ import * as lambda from 'aws-cdk-lib/aws-lambda';
 import * as dynamodb from 'aws-cdk-lib/aws-dynamodb';
 import * as cr from 'aws-cdk-lib/custom-resources';
 import * as iam from 'aws-cdk-lib/aws-iam';
+import * as cognito from 'aws-cdk-lib/aws-cognito';
 
 export class ProgressiveOverloadDevStack extends cdk.Stack {
   constructor(scope: Construct, id: string, props?: cdk.StackProps) {
     super(scope, id, props);
+
+    const userPool = new cognito.UserPool(this, 'UserPoolDev', {
+      userPoolName: 'ProgressiveOverloadUserPoolDev',
+      selfSignUpEnabled: true,
+      signInAliases: { email: true },
+      passwordPolicy: {
+        minLength: 8,
+        requireUppercase: true,
+        requireLowercase: true,
+        requireDigits: true,
+        requireSymbols: true,
+      }
+    });
+
+    const userPoolClient = new cognito.UserPoolClient(this, 'UserPoolClientDev', {
+      userPool,
+      authFlows: {
+        adminUserPassword: true,
+        userPassword: true,
+        userSrp: true
+      },
+    });
+
+    new cdk.CfnOutput(this, 'UserPoolDevId', {
+      value: userPool.userPoolId,
+    });
+
+    new cdk.CfnOutput(this, 'UserPoolClientDevId', {
+      value: userPoolClient.userPoolClientId,
+    });
+
 
     // Create a DynamoDB table
     const exercisesTable = new dynamodb.Table(this, 'DevExercisesTable', {
@@ -154,6 +186,4 @@ export class ProgressiveOverloadDevStack extends cdk.Stack {
     const exercisesData = api.root.addResource('exercises-data');
     exercisesData.addMethod('GET', new apigateway.LambdaIntegration(readDataFunction), corsParams);
   }
-
-
 }
