@@ -63,6 +63,20 @@ export class ProgressiveOverloadDevStack extends cdk.Stack {
       projectionType: dynamodb.ProjectionType.ALL
     });
 
+    exercisesTable.addGlobalSecondaryIndex({
+      indexName: 'UserEmailIsPBIndex',
+      partitionKey: { name: 'userEmail', type: dynamodb.AttributeType.STRING },
+      sortKey: { name: 'isPersonalBest', type: dynamodb.AttributeType.NUMBER },
+      projectionType: dynamodb.ProjectionType.ALL
+    });
+
+    // exercisesTable.addGlobalSecondaryIndex({
+    //   indexName: 'UserEmailExerciseNameIsPBIndex',
+    //   partitionKey: { name: 'userEmail#exerciseName', type: dynamodb.AttributeType.STRING },
+    //   sortKey: { name: 'isPersonalBest', type: dynamodb.AttributeType.NUMBER },
+    //   projectionType: dynamodb.ProjectionType.ALL
+    // });
+
     const exercisesDataTable = new dynamodb.Table(this, 'ExercisesDataTable', {
       partitionKey: { name: 'exerciseDataId', type: dynamodb.AttributeType.STRING },
       billingMode: dynamodb.BillingMode.PAY_PER_REQUEST,
@@ -124,13 +138,23 @@ export class ProgressiveOverloadDevStack extends cdk.Stack {
       },
     });
 
+    const listPersonalBestsFunction = new lambda.Function(this, 'DevListPersonalBestsFunction', {
+      runtime: lambda.Runtime.NODEJS_20_X,
+      code: lambda.Code.fromAsset('dist/personalBests'),
+      handler: 'listPersonalBests.handler',
+      environment: {
+        TABLE_NAME: exercisesTable.tableName
+      },
+    });
+
     // Grant Lambda functions access to the DynamoDB table
     exercisesTable.grantReadWriteData(createFunction);
-    exercisesTable.grantReadWriteData(readFunction);
+    exercisesTable.grantReadData(readFunction);
     exercisesTable.grantReadWriteData(updateFunction);
     exercisesTable.grantReadWriteData(deleteFunction);
     exercisesDataTable.grantReadWriteData(initFunction);
     exercisesDataTable.grantReadData(readDataFunction);
+    exercisesTable.grantReadData(listPersonalBestsFunction);
 
     new cr.AwsCustomResource(this, 'InitResource', {
       onCreate: {
@@ -150,9 +174,9 @@ export class ProgressiveOverloadDevStack extends cdk.Stack {
     });
 
     // Create an API Gateway
-    const api = new apigateway.RestApi(this, 'DevExercisesApi', {
-      restApiName: 'Exercises Service (DEV)',
-      description: 'This service serves exercises (DEV).',
+    const api = new apigateway.RestApi(this, 'DevProgressiveOverloadApi', {
+      restApiName: 'Progressive Overload (DEV)',
+      description: 'This service serves progressive overload app (DEV).',
       deployOptions: {
         stageName: this.node.tryGetContext('stage') || 'dev',
       },
@@ -178,12 +202,15 @@ export class ProgressiveOverloadDevStack extends cdk.Stack {
     const exercises = api.root.addResource('exercises');
     exercises.addMethod('POST', new apigateway.LambdaIntegration(createFunction), corsParams);
     exercises.addMethod('GET', new apigateway.LambdaIntegration(readFunction), corsParams);
-
     const exercise = exercises.addResource('{exerciseId}');
     exercise.addMethod('PUT', new apigateway.LambdaIntegration(updateFunction), corsParams);
     exercise.addMethod('DELETE', new apigateway.LambdaIntegration(deleteFunction), corsParams);
 
     const exercisesData = api.root.addResource('exercises-data');
     exercisesData.addMethod('GET', new apigateway.LambdaIntegration(readDataFunction), corsParams);
+
+    const listPersonalBests = api.root.addResource('personal-bests');
+    listPersonalBests.addMethod('GET', new apigateway.LambdaIntegration(listPersonalBestsFunction), corsParams);
+
   }
 }

@@ -9,7 +9,7 @@
     "watch": "tsc -w",
     "test": "jest",
     "cdk": "cdk",
-    "bundle": "esbuild lambda/exercises/*.js lambda/exercisesData/*.js --bundle --outdir=dist --platform=node --target=es2020"
+    "bundle": "esbuild lambda/**/*.js --bundle --outdir=dist --platform=node --target=es2020"
   },
   "devDependencies": {
     "@types/jest": "^29.5.12",
