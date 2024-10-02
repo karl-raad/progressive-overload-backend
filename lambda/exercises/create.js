@@ -10,10 +10,11 @@ const corsHeaders = {
 };
 
 const saveExercise = async (body, isPersonalBest) => {
+    const exerciseId = uuidv4();
     const params = {
         TableName: TABLE_NAME,
         Item: {
-            exerciseId: uuidv4(),
+            exerciseId: exerciseId,
             exerciseName: body.exerciseName,
             exerciseDate: body.exerciseDate,
             exerciseReps: body.exerciseReps || [],
@@ -25,6 +26,7 @@ const saveExercise = async (body, isPersonalBest) => {
         },
     };
     await dynamoDb.put(params).promise();
+    return exerciseId;
 };
 
 const updateExercisePB = async (exerciseId, isPersonalBest) => {
@@ -63,11 +65,11 @@ exports.handler = async (event) => {
 
         if (result.Items.length === 0) {
             // No personal best found, save new item with isPersonalBest = 1
-            await saveExercise(body, 1);
+            const exerciseId = await saveExercise(body, 1);
             return {
                 statusCode: 201,
                 headers: corsHeaders,
-                body: JSON.stringify({ message: 'Exercise created as personal best successfully' }),
+                body: JSON.stringify({ exerciseId: exerciseId, message: 'Exercise created as personal best successfully' }),
             };
         } else {
             // Personal best found, check volume
@@ -76,19 +78,19 @@ exports.handler = async (event) => {
                 // Update existing personal best to isPersonalBest = 0
                 await updateExercisePB(existingPB.exerciseId, 0);
                 // Save new exercise as personal best
-                await saveExercise(body, 1);
+                const exerciseId = await saveExercise(body, 1);
                 return {
                     statusCode: 201,
                     headers: corsHeaders,
-                    body: JSON.stringify({ message: 'Exercise created as personal best after updating existing PB' }),
+                    body: JSON.stringify({ exerciseId: exerciseId, message: 'Exercise created as personal best after updating existing PB' }),
                 };
             } else {
                 // Just save new exercise with isPersonalBest = 0
-                await saveExercise(body, 0);
+                const exerciseId = await saveExercise(body, 0);
                 return {
                     statusCode: 201,
                     headers: corsHeaders,
-                    body: JSON.stringify({ message: 'Exercise created successfully, not a personal best' }),
+                    body: JSON.stringify({ exerciseId: exerciseId, message: 'Exercise created successfully, not a personal best' }),
                 };
             }
         }
