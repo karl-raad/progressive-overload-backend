@@ -149,7 +149,7 @@ export class ProgressiveOverloadDevStack extends cdk.Stack {
 
     // Grant Lambda functions access to the DynamoDB table
     exercisesTable.grantReadWriteData(createFunction);
-    exercisesTable.grantReadData(readFunction);
+    exercisesTable.grantReadWriteData(readFunction);
     exercisesTable.grantReadWriteData(updateFunction);
     exercisesTable.grantReadWriteData(deleteFunction);
     exercisesDataTable.grantReadWriteData(initFunction);

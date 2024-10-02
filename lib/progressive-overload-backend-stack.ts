@@ -136,6 +136,15 @@ export class ProgressiveOverloadBackendStack extends cdk.Stack {
       },
     });
 
+    const listPersonalBestsFunction = new lambda.Function(this, 'ListPersonalBestsFunction', {
+      runtime: lambda.Runtime.NODEJS_20_X,
+      code: lambda.Code.fromAsset('dist/personalBests'),
+      handler: 'listPersonalBests.handler',
+      environment: {
+        TABLE_NAME: exercisesTable.tableName
+      },
+    });
+
     // Grant Lambda functions access to the DynamoDB table
     exercisesTable.grantReadWriteData(createFunction);
     exercisesTable.grantReadWriteData(readFunction);
@@ -143,6 +152,7 @@ export class ProgressiveOverloadBackendStack extends cdk.Stack {
     exercisesTable.grantReadWriteData(deleteFunction);
     exercisesDataTable.grantReadWriteData(initFunction);
     exercisesDataTable.grantReadData(readDataFunction);
+    exercisesTable.grantReadData(listPersonalBestsFunction);
 
     new cr.AwsCustomResource(this, 'InitResource', {
       onCreate: {
@@ -190,12 +200,15 @@ export class ProgressiveOverloadBackendStack extends cdk.Stack {
     const exercises = api.root.addResource('exercises');
     exercises.addMethod('POST', new apigateway.LambdaIntegration(createFunction), corsParams);
     exercises.addMethod('GET', new apigateway.LambdaIntegration(readFunction), corsParams);
-
     const exercise = exercises.addResource('{exerciseId}');
     exercise.addMethod('PUT', new apigateway.LambdaIntegration(updateFunction), corsParams);
     exercise.addMethod('DELETE', new apigateway.LambdaIntegration(deleteFunction), corsParams);
 
     const exercisesData = api.root.addResource('exercises-data');
     exercisesData.addMethod('GET', new apigateway.LambdaIntegration(readDataFunction), corsParams);
+
+    const listPersonalBests = api.root.addResource('personal-bests');
+    listPersonalBests.addMethod('GET', new apigateway.LambdaIntegration(listPersonalBestsFunction), corsParams);
+
   }
 }
