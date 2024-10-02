@@ -70,12 +70,12 @@ export class ProgressiveOverloadDevStack extends cdk.Stack {
       projectionType: dynamodb.ProjectionType.ALL
     });
 
-    // exercisesTable.addGlobalSecondaryIndex({
-    //   indexName: 'UserEmailExerciseNameIsPBIndex',
-    //   partitionKey: { name: 'userEmail#exerciseName', type: dynamodb.AttributeType.STRING },
-    //   sortKey: { name: 'isPersonalBest', type: dynamodb.AttributeType.NUMBER },
-    //   projectionType: dynamodb.ProjectionType.ALL
-    // });
+    exercisesTable.addGlobalSecondaryIndex({
+      indexName: 'UserEmailExerciseNameIsPBIndex',
+      partitionKey: { name: 'userEmail#exerciseName', type: dynamodb.AttributeType.STRING },
+      sortKey: { name: 'isPersonalBest', type: dynamodb.AttributeType.NUMBER },
+      projectionType: dynamodb.ProjectionType.ALL
+    });
 
     const exercisesDataTable = new dynamodb.Table(this, 'ExercisesDataTable', {
       partitionKey: { name: 'exerciseDataId', type: dynamodb.AttributeType.STRING },

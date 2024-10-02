@@ -61,6 +61,20 @@ export class ProgressiveOverloadBackendStack extends cdk.Stack {
       projectionType: dynamodb.ProjectionType.ALL
     });
 
+    exercisesTable.addGlobalSecondaryIndex({
+      indexName: 'UserEmailIsPBIndex',
+      partitionKey: { name: 'userEmail', type: dynamodb.AttributeType.STRING },
+      sortKey: { name: 'isPersonalBest', type: dynamodb.AttributeType.NUMBER },
+      projectionType: dynamodb.ProjectionType.ALL
+    });
+
+    exercisesTable.addGlobalSecondaryIndex({
+      indexName: 'UserEmailExerciseNameIsPBIndex',
+      partitionKey: { name: 'userEmail#exerciseName', type: dynamodb.AttributeType.STRING },
+      sortKey: { name: 'isPersonalBest', type: dynamodb.AttributeType.NUMBER },
+      projectionType: dynamodb.ProjectionType.ALL
+    });
+
     const exercisesDataTable = new dynamodb.Table(this, 'ExercisesDataTable', {
       partitionKey: { name: 'exerciseDataId', type: dynamodb.AttributeType.STRING },
       billingMode: dynamodb.BillingMode.PAY_PER_REQUEST,
