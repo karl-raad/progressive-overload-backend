@@ -9,6 +9,23 @@ import * as iam from 'aws-cdk-lib/aws-iam';
 import * as cognito from 'aws-cdk-lib/aws-cognito';
 
 export class ProgressiveOverloadBackendStack extends cdk.Stack {
+
+  private createCustomMessageLambda(): lambda.IFunction {
+    const customMessageLambda = new lambda.Function(this, 'CustomMessageLambda', {
+      runtime: lambda.Runtime.NODEJS_20_X,
+      code: lambda.Code.fromAsset('dist/auth'),
+      handler: 'emailCustomization.handler',
+      environment: {},
+    });
+
+    customMessageLambda.addToRolePolicy(new iam.PolicyStatement({
+      actions: ['ses:SendEmail', 'ses:SendTemplatedEmail'],
+      resources: ['*'],
+    }));
+
+    return customMessageLambda;
+  }
+
   constructor(scope: Construct, id: string, props?: cdk.StackProps) {
     super(scope, id, props);
     const userPool = new cognito.UserPool(this, 'UserPool', {
@@ -21,7 +38,10 @@ export class ProgressiveOverloadBackendStack extends cdk.Stack {
         requireLowercase: true,
         requireDigits: true,
         requireSymbols: true,
-      }
+      },
+      lambdaTriggers: {
+        customMessage: this.createCustomMessageLambda(),
+      },
     });
 
     const userPoolClient = new cognito.UserPoolClient(this, 'UserPoolClient', {
