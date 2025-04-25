@@ -192,7 +192,7 @@ export class ProgressiveOverloadBackendStack extends cdk.Stack {
     });
 
     // Create an API Gateway
-    const api = new apigateway.RestApi(this, 'ExercisesApi', {
+    const api = new apigateway.RestApi(this, 'ExercisesApiV1', {
       restApiName: 'Exercises Service',
       description: 'This service serves exercises.',
       deployOptions: {
