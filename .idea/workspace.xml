@@ -4,10 +4,7 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="1a71d5a7-1239-4ba0-89b8-caafb12e1248" name="Changes" comment="Replaced init exercise data with custom input data.">
-      <change afterPath="$PROJECT_DIR$/lambda/exercisesData/create.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/lambda/exercisesData/init.js" beforeDir="false" />
+    <list default="true" id="1a71d5a7-1239-4ba0-89b8-caafb12e1248" name="Changes" comment="Updated prod cdk stack to match dev.">
       <change beforePath="$PROJECT_DIR$/lib/progressive-overload-backend-dev-stack.ts" beforeDir="false" afterPath="$PROJECT_DIR$/lib/progressive-overload-backend-dev-stack.ts" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
@@ -38,6 +35,9 @@
     &quot;accountId&quot;: &quot;8a63300f-a9c1-4ce4-8fc0-8effdcbbd79b&quot;
   }
 }</component>
+  <component name="ProblemsViewState">
+    <option name="selectedTabId" value="CurrentFile" />
+  </component>
   <component name="ProjectColorInfo">{
   &quot;associatedIndex&quot;: 3
 }</component>
@@ -51,7 +51,7 @@
     "ModuleVcsDetector.initialDetectionPerformed": "true",
     "RunOnceActivity.ShowReadmeOnStart": "true",
     "RunOnceActivity.git.unshallow": "true",
-    "git-widget-placeholder": "dev",
+    "git-widget-placeholder": "master",
     "last_opened_file_path": "C:/Users/User/Workspace/progressive-overload/progressive-overload-backend",
     "node.js.detected.package.eslint": "true",
     "node.js.detected.package.tslint": "true",
@@ -84,13 +84,46 @@
       <workItem from="1745920854426" duration="354000" />
       <workItem from="1745921299063" duration="109000" />
     </task>
+    <task id="LOCAL-00001" summary="Updated prod cdk stack to match dev.">
+      <option name="closed" value="true" />
+      <created>1745922732503</created>
+      <option name="number" value="00001" />
+      <option name="presentableId" value="LOCAL-00001" />
+      <option name="project" value="LOCAL" />
+      <updated>1745922732503</updated>
+    </task>
+    <option name="localTasksCounter" value="2" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
     <option name="version" value="3" />
   </component>
+  <component name="Vcs.Log.Tabs.Properties">
+    <option name="TAB_STATES">
+      <map>
+        <entry key="MAIN">
+          <value>
+            <State>
+              <option name="FILTERS">
+                <map>
+                  <entry key="branch">
+                    <value>
+                      <list>
+                        <option value="master" />
+                      </list>
+                    </value>
+                  </entry>
+                </map>
+              </option>
+            </State>
+          </value>
+        </entry>
+      </map>
+    </option>
+  </component>
   <component name="VcsManagerConfiguration">
     <MESSAGE value="Replaced init exercise data with custom input data." />
-    <option name="LAST_COMMIT_MESSAGE" value="Replaced init exercise data with custom input data." />
+    <MESSAGE value="Updated prod cdk stack to match dev." />
+    <option name="LAST_COMMIT_MESSAGE" value="Updated prod cdk stack to match dev." />
   </component>
 </project>
