@@ -4,7 +4,6 @@ import { Construct } from 'constructs';
 import * as apigateway from 'aws-cdk-lib/aws-apigateway';
 import * as lambda from 'aws-cdk-lib/aws-lambda';
 import * as dynamodb from 'aws-cdk-lib/aws-dynamodb';
-import * as cr from 'aws-cdk-lib/custom-resources';
 import * as iam from 'aws-cdk-lib/aws-iam';
 import * as cognito from 'aws-cdk-lib/aws-cognito';
 
@@ -96,7 +95,7 @@ export class ProgressiveOverloadBackendStack extends cdk.Stack {
     });
 
     const exercisesDataTable = new dynamodb.Table(this, 'ExercisesDataTable', {
-      partitionKey: { name: 'exerciseDataId', type: dynamodb.AttributeType.STRING },
+      partitionKey: { name: 'userEmailExerciseDataName', type: dynamodb.AttributeType.STRING },
       billingMode: dynamodb.BillingMode.PAY_PER_REQUEST,
     });
 
@@ -137,14 +136,13 @@ export class ProgressiveOverloadBackendStack extends cdk.Stack {
       },
     });
 
-    const initFunction = new lambda.Function(this, 'InitDataFunction', {
+    const createDataFunction = new lambda.Function(this, 'CreateDataFunction', {
       runtime: lambda.Runtime.NODEJS_20_X,
       code: lambda.Code.fromAsset('dist/exercisesData'),
-      handler: 'init.handler',
+      handler: 'create.handler',
       environment: {
         TABLE_NAME: exercisesDataTable.tableName,
-      },
-      timeout: cdk.Duration.seconds(10)
+      }
     });
 
     const readDataFunction = new lambda.Function(this, 'ReadDataFunction', {
@@ -170,26 +168,9 @@ export class ProgressiveOverloadBackendStack extends cdk.Stack {
     exercisesTable.grantReadWriteData(readFunction);
     exercisesTable.grantReadWriteData(updateFunction);
     exercisesTable.grantReadWriteData(deleteFunction);
-    exercisesDataTable.grantReadWriteData(initFunction);
+    exercisesDataTable.grantReadWriteData(createDataFunction);
     exercisesDataTable.grantReadData(readDataFunction);
     exercisesTable.grantReadData(listPersonalBestsFunction);
-
-    new cr.AwsCustomResource(this, 'InitResource', {
-      onCreate: {
-        service: 'Lambda',
-        action: 'invoke',
-        parameters: {
-          FunctionName: initFunction.functionArn,
-        },
-        physicalResourceId: cr.PhysicalResourceId.of(Date.now().toString()),
-      },
-      policy: cr.AwsCustomResourcePolicy.fromStatements([
-        new iam.PolicyStatement({
-          actions: ['lambda:InvokeFunction'],
-          resources: [initFunction.functionArn],
-        }),
-      ]),
-    });
 
     // Create an API Gateway
     const api = new apigateway.RestApi(this, 'ExercisesApiV1', {
@@ -225,6 +206,7 @@ export class ProgressiveOverloadBackendStack extends cdk.Stack {
     exercise.addMethod('DELETE', new apigateway.LambdaIntegration(deleteFunction), corsParams);
 
     const exercisesData = api.root.addResource('exercises-data');
+    exercisesData.addMethod('POST', new apigateway.LambdaIntegration(createDataFunction), corsParams);
     exercisesData.addMethod('GET', new apigateway.LambdaIntegration(readDataFunction), corsParams);
 
     const listPersonalBests = api.root.addResource('personal-bests');
