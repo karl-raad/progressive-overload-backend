@@ -4,8 +4,8 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="1a71d5a7-1239-4ba0-89b8-caafb12e1248" name="Changes" comment="Updated prod cdk stack to match dev.">
-      <change beforePath="$PROJECT_DIR$/lib/progressive-overload-backend-dev-stack.ts" beforeDir="false" afterPath="$PROJECT_DIR$/lib/progressive-overload-backend-dev-stack.ts" afterDir="false" />
+    <list default="true" id="1a71d5a7-1239-4ba0-89b8-caafb12e1248" name="Changes" comment="Updated billing configuration.">
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -46,23 +46,23 @@
     <option name="hideEmptyMiddlePackages" value="true" />
     <option name="showLibraryContents" value="true" />
   </component>
-  <component name="PropertiesComponent"><![CDATA[{
-  "keyToString": {
-    "ModuleVcsDetector.initialDetectionPerformed": "true",
-    "RunOnceActivity.ShowReadmeOnStart": "true",
-    "RunOnceActivity.git.unshallow": "true",
-    "git-widget-placeholder": "master",
-    "last_opened_file_path": "C:/Users/User/Workspace/progressive-overload/progressive-overload-backend",
-    "node.js.detected.package.eslint": "true",
-    "node.js.detected.package.tslint": "true",
-    "node.js.selected.package.eslint": "(autodetect)",
-    "node.js.selected.package.tslint": "(autodetect)",
-    "nodejs_package_manager_path": "npm",
-    "settings.editor.selected.configurable": "preferences.lookFeel",
-    "ts.external.directory.path": "C:\\Users\\User\\Workspace\\progressive-overload\\progressive-overload-backend\\node_modules\\typescript\\lib",
-    "vue.rearranger.settings.migration": "true"
+  <component name="PropertiesComponent">{
+  &quot;keyToString&quot;: {
+    &quot;ModuleVcsDetector.initialDetectionPerformed&quot;: &quot;true&quot;,
+    &quot;RunOnceActivity.ShowReadmeOnStart&quot;: &quot;true&quot;,
+    &quot;RunOnceActivity.git.unshallow&quot;: &quot;true&quot;,
+    &quot;git-widget-placeholder&quot;: &quot;dev&quot;,
+    &quot;last_opened_file_path&quot;: &quot;C:/Users/User/Workspace/progressive-overload/progressive-overload-backend&quot;,
+    &quot;node.js.detected.package.eslint&quot;: &quot;true&quot;,
+    &quot;node.js.detected.package.tslint&quot;: &quot;true&quot;,
+    &quot;node.js.selected.package.eslint&quot;: &quot;(autodetect)&quot;,
+    &quot;node.js.selected.package.tslint&quot;: &quot;(autodetect)&quot;,
+    &quot;nodejs_package_manager_path&quot;: &quot;npm&quot;,
+    &quot;settings.editor.selected.configurable&quot;: &quot;preferences.lookFeel&quot;,
+    &quot;ts.external.directory.path&quot;: &quot;C:\\Users\\User\\Workspace\\progressive-overload\\progressive-overload-backend\\node_modules\\typescript\\lib&quot;,
+    &quot;vue.rearranger.settings.migration&quot;: &quot;true&quot;
   }
-}]]></component>
+}</component>
   <component name="SharedIndexes">
     <attachedChunks>
       <set>
@@ -83,6 +83,7 @@
       <workItem from="1745905570119" duration="19000" />
       <workItem from="1745920854426" duration="354000" />
       <workItem from="1745921299063" duration="109000" />
+      <workItem from="1746493557619" duration="1035000" />
     </task>
     <task id="LOCAL-00001" summary="Updated prod cdk stack to match dev.">
       <option name="closed" value="true" />
@@ -92,7 +93,15 @@
       <option name="project" value="LOCAL" />
       <updated>1745922732503</updated>
     </task>
-    <option name="localTasksCounter" value="2" />
+    <task id="LOCAL-00002" summary="Updated billing configuration.">
+      <option name="closed" value="true" />
+      <created>1745923771678</created>
+      <option name="number" value="00002" />
+      <option name="presentableId" value="LOCAL-00002" />
+      <option name="project" value="LOCAL" />
+      <updated>1745923771678</updated>
+    </task>
+    <option name="localTasksCounter" value="3" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -124,6 +133,7 @@
   <component name="VcsManagerConfiguration">
     <MESSAGE value="Replaced init exercise data with custom input data." />
     <MESSAGE value="Updated prod cdk stack to match dev." />
-    <option name="LAST_COMMIT_MESSAGE" value="Updated prod cdk stack to match dev." />
+    <MESSAGE value="Updated billing configuration." />
+    <option name="LAST_COMMIT_MESSAGE" value="Updated billing configuration." />
   </component>
 </project>
