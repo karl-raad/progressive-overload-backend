@@ -98,6 +98,7 @@ export class ProgressiveOverloadDevStack extends cdk.Stack {
 
     const exercisesDataTable = new dynamodb.Table(this, 'ExercisesDataTable', {
       partitionKey: { name: 'userEmailExerciseDataName', type: dynamodb.AttributeType.STRING },
+      billingMode: dynamodb.BillingMode.PAY_PER_REQUEST
     });
 
     // Create Lambda functions for each CRUD operation
